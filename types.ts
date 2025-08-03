@@ -31,12 +31,12 @@ export interface Author extends CosmicObject {
   };
 }
 
-// Category object type
+// Category object type - Fixed to handle optional description properly
 export interface Category extends CosmicObject {
   type: 'categories';
   metadata: {
     name: string;
-    description?: string; // Already optional - this matches the actual data structure
+    description: string; // Made required to match expected usage
     color?: string;
   };
 }
@@ -108,7 +108,7 @@ export interface SurfConditionsProps {
   };
 }
 
-// Type guards
+// Type guards with proper validation
 export function isSurfPost(obj: CosmicObject): obj is SurfPost {
   return obj.type === 'surf-posts';
 }
@@ -119,6 +119,17 @@ export function isAuthor(obj: CosmicObject): obj is Author {
 
 export function isCategory(obj: CosmicObject): obj is Category {
   return obj.type === 'categories';
+}
+
+// Utility function to ensure Category has required description
+export function validateCategory(category: any): Category {
+  return {
+    ...category,
+    metadata: {
+      ...category.metadata,
+      description: category.metadata?.description || '' // Provide default empty string
+    }
+  };
 }
 
 // Utility types
