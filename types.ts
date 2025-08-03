@@ -90,7 +90,7 @@ export interface CategoryFilterProps {
 
 export interface AuthorCardProps {
   author: Author;
-  className?: string; // Added missing className prop
+  className?: string;
   showBio?: boolean;
 }
 
