@@ -1,58 +1,60 @@
 'use client'
 
 import { useState } from 'react'
-
-interface Category {
-  id: string
-  title: string
-  slug: string
-  metadata: {
-    name: string
-    description: string
-    color: string
-  }
-}
+import { Category } from '@/types'
+import CategoryBadge from './CategoryBadge'
 
 interface CategoryFilterProps {
   categories: Category[]
-  selectedCategory: string | null
-  onCategoryChange: (categorySlug: string | null) => void
+  selectedCategory?: string | null
+  onCategoryChange?: (categoryId: string | null) => void
 }
 
 export default function CategoryFilter({ 
   categories, 
-  selectedCategory, 
+  selectedCategory = null, 
   onCategoryChange 
 }: CategoryFilterProps) {
+  const [activeCategory, setActiveCategory] = useState<string | null>(selectedCategory)
+
+  const handleCategoryClick = (categoryId: string | null) => {
+    setActiveCategory(categoryId)
+    onCategoryChange?.(categoryId)
+  }
+
+  // Filter out categories without proper metadata
+  const validCategories = categories.filter(category => 
+    category.metadata && category.metadata.name
+  )
+
   return (
-    <div className="flex flex-wrap gap-2 mb-8">
+    <div className="flex flex-wrap gap-3 justify-center">
       <button
-        onClick={() => onCategoryChange(null)}
+        onClick={() => handleCategoryClick(null)}
         className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-          selectedCategory === null
+          activeCategory === null
             ? 'bg-blue-600 text-white'
             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`}
       >
-        All Posts
+        All Reports
       </button>
       
-      {categories.map((category) => (
+      {validCategories.map((category) => (
         <button
           key={category.id}
-          onClick={() => onCategoryChange(category.slug)}
+          onClick={() => handleCategoryClick(category.id)}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-            selectedCategory === category.slug
-              ? 'text-white'
+            activeCategory === category.id
+              ? 'bg-blue-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
-          style={{
-            backgroundColor: selectedCategory === category.slug 
-              ? category.metadata.color 
-              : undefined
-          }}
+          title={category.metadata?.description || category.metadata.name}
         >
-          {category.metadata.name}
+          <CategoryBadge 
+            category={category} 
+            variant={activeCategory === category.id ? 'selected' : 'default'}
+          />
         </button>
       ))}
     </div>

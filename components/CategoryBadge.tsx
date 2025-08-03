@@ -1,32 +1,33 @@
-import { Category, getCategoryColor, getCategoryDescription } from '@/types'
+import { Category, getCategoryColor } from '@/types'
 
 interface CategoryBadgeProps {
   category: Category
-  showDescription?: boolean
+  variant?: 'default' | 'selected'
   className?: string
 }
 
 export default function CategoryBadge({ 
   category, 
-  showDescription = false, 
-  className = "" 
+  variant = 'default', 
+  className = '' 
 }: CategoryBadgeProps) {
   const color = getCategoryColor(category)
-  const description = getCategoryDescription(category)
   
+  const baseClasses = 'px-2 py-1 rounded-full text-xs font-medium transition-colors'
+  
+  const variantClasses = {
+    default: 'bg-gray-100 text-gray-700',
+    selected: 'text-white'
+  }
+  
+  const style = variant === 'selected' ? { backgroundColor: color } : {}
+
   return (
-    <div className={`inline-flex items-center ${className}`}>
-      <span 
-        className="px-3 py-1 text-xs font-medium text-white rounded-full"
-        style={{ backgroundColor: color }}
-      >
-        {category.metadata?.name || category.title}
-      </span>
-      {showDescription && description && (
-        <span className="ml-2 text-sm text-gray-600">
-          {description}
-        </span>
-      )}
-    </div>
+    <span 
+      className={`${baseClasses} ${variantClasses[variant]} ${className}`}
+      style={style}
+    >
+      {category.metadata?.name || 'Untitled Category'}
+    </span>
   )
 }
