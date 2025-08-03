@@ -1,29 +1,10 @@
-interface Author {
-  id: string
-  title: string
-  slug: string
-  metadata: {
-    name: string
-    bio?: string
-    profile_photo?: {
-      url: string
-      imgix_url: string
-    }
-    years_surfing?: number
-    favorite_spot?: string
-  }
-}
+import { AuthorCardProps } from '@/types'
 
-interface AuthorCardProps {
-  author: Author
-  showBio?: boolean
-}
-
-export default function AuthorCard({ author, showBio = false }: AuthorCardProps) {
+export default function AuthorCard({ author, showBio = false, className = '' }: AuthorCardProps) {
   const { metadata } = author
   
   return (
-    <div className="flex items-start gap-3">
+    <div className={`flex items-start gap-3 ${className}`}>
       {metadata.profile_photo?.imgix_url && (
         <img
           src={`${metadata.profile_photo.imgix_url}?w=120&h=120&fit=crop&auto=format,compress`}
