@@ -20,7 +20,7 @@ export type SurfRating = 'poor' | 'fair' | 'good' | 'excellent' | 'epic';
 export interface Author extends CosmicObject {
   type: 'authors';
   metadata: {
-    name?: string;
+    name: string; // Made required since it's always present in data
     bio?: string;
     profile_photo?: {
       url: string;
@@ -35,7 +35,7 @@ export interface Author extends CosmicObject {
 export interface Category extends CosmicObject {
   type: 'categories';
   metadata: {
-    name?: string;
+    name: string; // Made required since it's always present in data
     description?: string;
     color?: string;
   };
@@ -91,6 +91,20 @@ export interface CategoryFilterProps {
 export interface AuthorCardProps {
   author: Author;
   className?: string;
+}
+
+export interface SurfConditionsProps {
+  post?: SurfPost;
+  surfSpot?: string;
+  waveHeight?: string;
+  windConditions?: {
+    key: string;
+    value: string;
+  };
+  surfRating?: {
+    key: string;
+    value: string;
+  };
 }
 
 // Type guards

@@ -1,23 +1,19 @@
-interface SurfConditionsProps {
-  surfSpot?: string
-  waveHeight?: string
-  windConditions?: {
-    key: string
-    value: string
-  }
-  surfRating?: {
-    key: string
-    value: string
-  }
-}
+import { SurfConditionsProps } from '@/types'
 
 export default function SurfConditions({ 
+  post,
   surfSpot, 
   waveHeight, 
   windConditions, 
   surfRating 
 }: SurfConditionsProps) {
-  if (!surfSpot && !waveHeight && !windConditions && !surfRating) {
+  // Extract conditions from post if provided
+  const finalSurfSpot = surfSpot || post?.metadata?.surf_spot
+  const finalWaveHeight = waveHeight || post?.metadata?.wave_height
+  const finalWindConditions = windConditions || post?.metadata?.wind_conditions
+  const finalSurfRating = surfRating || post?.metadata?.surf_rating
+
+  if (!finalSurfSpot && !finalWaveHeight && !finalWindConditions && !finalSurfRating) {
     return null
   }
 
@@ -58,43 +54,43 @@ export default function SurfConditions({
       <h3 className="font-semibold text-gray-900 mb-3">Surf Conditions</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {surfSpot && (
+        {finalSurfSpot && (
           <div className="flex items-center gap-2">
             <span className="text-lg">📍</span>
             <div>
               <p className="text-sm text-gray-600">Surf Spot</p>
-              <p className="font-medium">{surfSpot}</p>
+              <p className="font-medium">{finalSurfSpot}</p>
             </div>
           </div>
         )}
         
-        {waveHeight && (
+        {finalWaveHeight && (
           <div className="flex items-center gap-2">
             <span className="text-lg">🌊</span>
             <div>
               <p className="text-sm text-gray-600">Wave Height</p>
-              <p className="font-medium">{waveHeight}</p>
+              <p className="font-medium">{finalWaveHeight}</p>
             </div>
           </div>
         )}
         
-        {windConditions && (
+        {finalWindConditions && (
           <div className="flex items-center gap-2">
-            <span className="text-lg">{getWindIcon(windConditions.key)}</span>
+            <span className="text-lg">{getWindIcon(finalWindConditions.key)}</span>
             <div>
               <p className="text-sm text-gray-600">Wind Conditions</p>
-              <p className="font-medium">{windConditions.value}</p>
+              <p className="font-medium">{finalWindConditions.value}</p>
             </div>
           </div>
         )}
         
-        {surfRating && (
+        {finalSurfRating && (
           <div className="flex items-center gap-2">
             <span className="text-lg">⭐</span>
             <div>
               <p className="text-sm text-gray-600">Surf Rating</p>
-              <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getRatingColor(surfRating.key)}`}>
-                {surfRating.value}
+              <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getRatingColor(finalSurfRating.key)}`}>
+                {finalSurfRating.value}
               </span>
             </div>
           </div>
