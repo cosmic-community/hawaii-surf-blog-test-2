@@ -36,7 +36,7 @@ export interface Category extends CosmicObject {
   type: 'categories';
   metadata: {
     name: string;
-    description?: string; // Made optional to match actual data structure
+    description?: string; // Already optional - this matches the actual data structure
     color?: string;
   };
 }
