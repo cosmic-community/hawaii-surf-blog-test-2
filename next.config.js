@@ -6,7 +6,6 @@ const nextConfig = {
       'imgix.cosmicjs.com'
     ],
   },
-  typedRoutes: false
 }
 
 module.exports = nextConfig
