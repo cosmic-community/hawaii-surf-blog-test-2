@@ -31,13 +31,13 @@ export interface Author extends CosmicObject {
   };
 }
 
-// Category object type - Fixed to handle optional description properly
+// Category object type - Fixed to handle optional properties properly
 export interface Category extends CosmicObject {
   type: 'categories';
   metadata: {
     name: string;
-    description: string; // Made required to match expected usage
-    color?: string;
+    description?: string; // Made optional to handle undefined cases
+    color?: string; // Already optional, which matches the error
   };
 }
 
@@ -72,6 +72,13 @@ export interface CosmicResponse<T> {
   total: number;
   limit?: number;
   skip?: number;
+}
+
+// Error type for proper error handling
+export interface CosmicError {
+  status?: number;
+  message?: string;
+  [key: string]: any;
 }
 
 // Component prop types
@@ -121,15 +128,19 @@ export function isCategory(obj: CosmicObject): obj is Category {
   return obj.type === 'categories';
 }
 
-// Utility function to ensure Category has required description
-export function validateCategory(category: any): Category {
-  return {
-    ...category,
-    metadata: {
-      ...category.metadata,
-      description: category.metadata?.description || '' // Provide default empty string
-    }
-  };
+// Error type guard
+export function isCosmicError(error: unknown): error is CosmicError {
+  return typeof error === 'object' && error !== null && 'status' in error;
+}
+
+// Utility function to safely access category description
+export function getCategoryDescription(category: Category): string {
+  return category.metadata?.description || '';
+}
+
+// Utility function to safely access category color
+export function getCategoryColor(category: Category): string {
+  return category.metadata?.color || '#6B7280'; // Default gray color
 }
 
 // Utility types

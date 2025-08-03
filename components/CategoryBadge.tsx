@@ -1,32 +1,32 @@
-interface Category {
-  id: string
-  title: string
-  slug: string
-  metadata: {
-    name: string
-    description: string
-    color: string
-  }
-}
+import { Category, getCategoryColor, getCategoryDescription } from '@/types'
 
 interface CategoryBadgeProps {
   category: Category
-  size?: 'sm' | 'md' | 'lg'
+  showDescription?: boolean
+  className?: string
 }
 
-export default function CategoryBadge({ category, size = 'md' }: CategoryBadgeProps) {
-  const sizeClasses = {
-    sm: 'px-2 py-1 text-xs',
-    md: 'px-3 py-1 text-sm',
-    lg: 'px-4 py-2 text-base'
-  }
+export default function CategoryBadge({ 
+  category, 
+  showDescription = false, 
+  className = "" 
+}: CategoryBadgeProps) {
+  const color = getCategoryColor(category)
+  const description = getCategoryDescription(category)
   
   return (
-    <span
-      className={`inline-block rounded-full font-medium text-white ${sizeClasses[size]}`}
-      style={{ backgroundColor: category.metadata.color }}
-    >
-      {category.metadata.name}
-    </span>
+    <div className={`inline-flex items-center ${className}`}>
+      <span 
+        className="px-3 py-1 text-xs font-medium text-white rounded-full"
+        style={{ backgroundColor: color }}
+      >
+        {category.metadata?.name || category.title}
+      </span>
+      {showDescription && description && (
+        <span className="ml-2 text-sm text-gray-600">
+          {description}
+        </span>
+      )}
+    </div>
   )
 }
